@@ -89,6 +89,9 @@ def inject_styles() -> None:
         [data-testid="stSidebar"] div.stButton > button * {{
             color: var(--ud-navy) !important;
         }}
+        [data-testid="stSidebar"] div.stButton {{
+            margin-top: 1.35rem;
+        }}
 
         .block-container {{
             max-width: 1180px;
@@ -459,8 +462,7 @@ def intro_cards() -> None:
     st.markdown(
         """
         <div class="overview-note">
-            <strong>Activity overview</strong><br>
-            These three cards preview what you will do. They are not buttons; make your choices in the sections that follow.
+            <strong>In this activity, you will:</strong>
         </div>
         """,
         unsafe_allow_html=True,
@@ -506,7 +508,7 @@ def render_launch_lab() -> None:
     )
     intro_cards()
 
-    st.subheader("Why organize as a corporation?")
+    st.subheader("Choose a business structure")
     st.write(
         "Our campus service expects several investors, wants to raise substantial funds, "
         "and wants owners to avoid personal liability. Which organization fits best?"
@@ -776,44 +778,56 @@ def render_financial_statements() -> None:
 
     statement_questions = {
         "Income Statement": {
-            "question": "What is the income statement designed to communicate?",
+            "question": "Which conclusion is supported by this income statement?",
             "options": (
-                "The success or failure of operations during a period",
-                "The resources and claims at a point in time",
-                "The sources and uses of cash by activity type",
+                f"The company’s cash increased by {money(summary.net_income)} because net income and cash change are the same.",
+                f"The company earned net income of {money(summary.net_income)} from its operations during the year.",
+                f"The company ended the year with total assets of {money(summary.net_income)}.",
             ),
-            "correct": "The success or failure of operations during a period",
-            "feedback": "Revenue less expenses produces net income or net loss for the period.",
+            "correct": f"The company earned net income of {money(summary.net_income)} from its operations during the year.",
+            "feedback": (
+                "The statement supports a conclusion about operating performance. "
+                "It does not, by itself, explain the change in cash or total assets."
+            ),
         },
         "Retained Earnings": {
-            "question": "Which items explain the change in retained earnings?",
+            "question": f"How should ending retained earnings of {money(summary.ending_retained_earnings)} be interpreted?",
             "options": (
-                "Net income or net loss and dividends",
-                "Assets purchased and liabilities incurred",
-                "Only cash received from customers",
+                "It is the amount of cash remaining after the company paid expenses and dividends.",
+                "It includes the shareholders’ original common stock investment plus net income less dividends.",
+                f"Beginning retained earnings of $0, plus {money(summary.net_income)} of net income, less {money(summary.dividends)} of dividends, produces the ending balance.",
             ),
-            "correct": "Net income or net loss and dividends",
-            "feedback": "Net income increases retained earnings, while dividends reduce it.",
+            "correct": f"Beginning retained earnings of $0, plus {money(summary.net_income)} of net income, less {money(summary.dividends)} of dividends, produces the ending balance.",
+            "feedback": (
+                "Retained earnings accumulates earnings kept in the business. Common "
+                "stock is a separate component of stockholders’ equity."
+            ),
         },
         "Balance Sheet": {
-            "question": "What relationship should the balance sheet demonstrate?",
+            "question": f"Which statement best explains how the company financed its {money(summary.total_assets)} of assets?",
             "options": (
-                "Assets equal liabilities plus stockholders’ equity",
-                "Revenue equals cash received",
-                "Operating cash flow equals net income",
+                "Cash and equipment identify the outside sources that financed all of the company’s assets.",
+                f"Creditors have claims of {money(summary.notes_payable)}, and shareholders have claims of {money(summary.common_stock + summary.ending_retained_earnings)}.",
+                f"Revenue of {money(summary.revenue)} and expenses of {money(summary.total_expenses)} account for all claims on the assets.",
             ),
-            "correct": "Assets equal liabilities plus stockholders’ equity",
-            "feedback": "The balance sheet presents resources and the creditor and owner claims on them.",
+            "correct": f"Creditors have claims of {money(summary.notes_payable)}, and shareholders have claims of {money(summary.common_stock + summary.ending_retained_earnings)}.",
+            "feedback": (
+                "Assets are the resources. Liabilities and stockholders’ equity "
+                "identify the creditor and owner claims that financed those resources."
+            ),
         },
         "Statement of Cash Flows": {
-            "question": "How does the statement of cash flows organize cash changes?",
+            "question": f"Which interpretation best explains ending cash of {money(summary.cash)}?",
             "options": (
-                "By operating, investing, and financing activities",
-                "By assets, liabilities, and equity",
-                "By revenues and expenses only",
+                f"Operating cash flow of {money(summary.operating_cash_flow)} alone explains the ending cash balance.",
+                f"Net financing cash of {money(summary.financing_cash_flow)} and operating cash of {money(summary.operating_cash_flow)}, less {money(abs(summary.investing_cash_flow))} used for investing, produce ending cash.",
+                "The equipment purchase is an operating outflow, while the dividend is an investing outflow.",
             ),
-            "correct": "By operating, investing, and financing activities",
-            "feedback": "The three activity categories explain where cash came from and how it was used.",
+            "correct": f"Net financing cash of {money(summary.financing_cash_flow)} and operating cash of {money(summary.operating_cash_flow)}, less {money(abs(summary.investing_cash_flow))} used for investing, produce ending cash.",
+            "feedback": (
+                "Ending cash is reconciled through all three activity categories, not "
+                "through operating results alone."
+            ),
         },
     }
 
