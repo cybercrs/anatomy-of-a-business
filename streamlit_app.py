@@ -34,6 +34,7 @@ PAGES = (
     "3 · Financial Statements",
     "4 · Decision Desk",
 )
+STATEMENT_QUESTION_REVISION = 2
 
 
 st.set_page_config(
@@ -324,6 +325,17 @@ def inject_styles() -> None:
     )
 
 
+def clear_statement_widget_state() -> None:
+    for key in (
+        "statement_selection",
+        "statement_answer_income_statement",
+        "statement_answer_retained_earnings",
+        "statement_answer_balance_sheet",
+        "statement_answer_statement_of_cash_flows",
+    ):
+        st.session_state.pop(key, None)
+
+
 def initialize_state() -> None:
     defaults = {
         "page": PAGES[0],
@@ -343,6 +355,11 @@ def initialize_state() -> None:
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
+    if st.session_state.get("statement_question_revision") != STATEMENT_QUESTION_REVISION:
+        clear_statement_widget_state()
+        st.session_state.statement_results = {}
+        st.session_state.statement_checked = False
+        st.session_state.statement_question_revision = STATEMENT_QUESTION_REVISION
 
 
 def reset_experience() -> None:
@@ -361,6 +378,7 @@ def launch_scenario() -> None:
     }
     st.session_state.activity_answers = {}
     st.session_state.activity_checked = False
+    clear_statement_widget_state()
     st.session_state.statement_results = {}
     st.session_state.statement_checked = False
     st.session_state.decision_completed = False
@@ -1026,7 +1044,10 @@ def render_decision_desk() -> None:
         stakeholder_card(
             "Internal user · Manager",
             "How did our financing, investing, and operating choices shape the business?",
-            "All four statements plus detailed internal reports",
+            (
+                "Statement of cash flows for this question; other management decisions "
+                "may begin with other statements"
+            ),
             (
                 f"Financing activities produced a net cash inflow of "
                 f"{money(summary.financing_cash_flow)}; operations generated "
@@ -1089,12 +1110,14 @@ def render_decision_desk() -> None:
         ),
         (
             "Why do users need four statements instead of one all-purpose report?",
-            (
-                "Each statement answers a different question. The income statement "
-                "explains performance, retained earnings explains accumulated earnings "
-                "kept in the business, the balance sheet shows resources and claims at a "
-                "point in time, and the statement of cash flows explains cash activity."
-            ),
+            """
+            Each statement answers a different question:
+
+            - **Income statement:** How successfully did the company operate during the period?
+            - **Retained earnings:** How did earnings and dividends change the cumulative amount kept in the business?
+            - **Balance sheet:** What resources and claims exist at a point in time?
+            - **Statement of cash flows:** How did operating, investing, and financing activities change cash?
+            """,
         ),
         (
             "Which statement would you examine first as an investor, creditor, or manager—and why?",
@@ -1126,10 +1149,7 @@ def render_decision_desk() -> None:
             "before finishing the learning journey."
         )
     if st.session_state.decision_completed:
-        st.success(
-            "You completed the anatomy: business decisions created activities; activities "
-            "affected accounts; accounts formed statements; statements supported decisions."
-        )
+        st.success("Congratulations on completing Anatomy of a Business!")
 
 
 inject_styles()
