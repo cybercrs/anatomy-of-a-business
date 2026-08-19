@@ -242,6 +242,13 @@ def inject_styles() -> None:
         .statement-row.indent {{ padding-left: 1.25rem; color: var(--muted); }}
         .statement-row.total {{ border-top: 1px solid #AEBAC5; font-weight: 800; color: var(--ud-navy); margin-top: .25rem; }}
         .statement-row.grand-total {{ border-top: 3px double var(--ud-navy); font-weight: 900; color: var(--ud-navy); }}
+        .answer-feedback {{
+            color: var(--ink);
+            font-size: 1rem;
+            line-height: 1.55;
+            margin: .75rem 0;
+        }}
+        .answer-feedback strong {{ color: var(--ink); }}
 
         .flow {{
             display: grid;
@@ -394,6 +401,12 @@ def apply_pending_scroll() -> None:
 def money(value: int) -> str:
     sign = "−" if value < 0 else ""
     return f"{sign}${abs(value):,.0f}"
+
+
+def markdown_money(value: int) -> str:
+    """Keep currency values from being interpreted as inline math in Markdown."""
+
+    return money(value).replace("$", r"\$")
 
 
 def hero() -> None:
@@ -791,16 +804,17 @@ def render_financial_statements() -> None:
             ),
         },
         "Retained Earnings": {
-            "question": f"How should ending retained earnings of {money(summary.ending_retained_earnings)} be interpreted?",
+            "question": "Which statement best defines retained earnings?",
             "options": (
-                "It is the amount of cash remaining after the company paid expenses and dividends.",
-                "It includes the shareholders’ original common stock investment plus net income less dividends.",
-                f"Beginning retained earnings of $0, plus {money(summary.net_income)} of net income, less {money(summary.dividends)} of dividends, produces the ending balance.",
+                "Cash that management has formally reserved for future business use.",
+                "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
+                "Amounts received from shareholders in exchange for common stock.",
             ),
-            "correct": f"Beginning retained earnings of $0, plus {money(summary.net_income)} of net income, less {money(summary.dividends)} of dividends, produces the ending balance.",
+            "correct": "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
             "feedback": (
-                "Retained earnings accumulates earnings kept in the business. Common "
-                "stock is a separate component of stockholders’ equity."
+                "Retained earnings represents cumulative earnings kept in the business. "
+                "It is not a cash reserve, and shareholder contributions are reported "
+                "separately as common stock."
             ),
         },
         "Balance Sheet": {
@@ -817,16 +831,17 @@ def render_financial_statements() -> None:
             ),
         },
         "Statement of Cash Flows": {
-            "question": f"Which interpretation best explains ending cash of {money(summary.cash)}?",
+            "question": "What does the statement of cash flows add to the financial picture?",
             "options": (
-                f"Operating cash flow of {money(summary.operating_cash_flow)} alone explains the ending cash balance.",
-                f"Net financing cash of {money(summary.financing_cash_flow)} and operating cash of {money(summary.operating_cash_flow)}, less {money(abs(summary.investing_cash_flow))} used for investing, produce ending cash.",
-                "The equipment purchase is an operating outflow, while the dividend is an investing outflow.",
+                "It measures operating success by comparing revenues with expenses.",
+                "It reports the company’s resources and the creditor and owner claims on those resources at a point in time.",
+                "It explains how operating, investing, and financing activities changed cash during the period.",
             ),
-            "correct": f"Net financing cash of {money(summary.financing_cash_flow)} and operating cash of {money(summary.operating_cash_flow)}, less {money(abs(summary.investing_cash_flow))} used for investing, produce ending cash.",
+            "correct": "It explains how operating, investing, and financing activities changed cash during the period.",
             "feedback": (
-                "Ending cash is reconciled through all three activity categories, not "
-                "through operating results alone."
+                "The statement of cash flows explains the change in cash by business "
+                "activity. Profitability and financial position are communicated by "
+                "other statements."
             ),
         },
     }
@@ -914,11 +929,16 @@ def render_financial_statements() -> None:
 
     if selected_statement in st.session_state.statement_results:
         if st.session_state.statement_results[selected_statement]:
-            st.success(question_data["feedback"])
+            st.markdown(
+                f'<div class="answer-feedback"><strong>Correct.</strong> {escape(question_data["feedback"])}</div>',
+                unsafe_allow_html=True,
+            )
         else:
-            st.warning(
-                f"Take another look. The best answer is: {question_data['correct']}. "
-                f"{question_data['feedback']}"
+            st.markdown(
+                '<div class="answer-feedback">'
+                f'<strong>Review.</strong> The best answer is “{escape(question_data["correct"])}” '
+                f'{escape(question_data["feedback"])}</div>',
+                unsafe_allow_html=True,
             )
 
     statements_completed = len(st.session_state.statement_results)
@@ -1045,15 +1065,27 @@ def render_decision_desk() -> None:
     st.subheader("Class debrief")
     st.caption("Select a question to reveal a model answer.")
     c1, c2, c3 = st.columns(3)
+    if summary.dividends:
+        dividend_example = (
+            f"Paying {markdown_money(summary.dividends)} in dividends reduced both cash and "
+            "retained earnings."
+        )
+    else:
+        dividend_example = (
+            "Keeping all earnings in the business preserved both cash and retained "
+            "earnings for future use."
+        )
     debrief_items = (
         (
             "Which business choice changed the company’s financial position most?",
-            (
-                f"The financing plan established the company’s initial resource base: "
-                f"shareholders and creditors provided {money(summary.common_stock + summary.notes_payable)}. "
-                "A different answer can also be well supported if it explains how an "
-                "operating or investing choice changed both the numbers and the business."
-            ),
+            f"""
+            Several answers can be supported with evidence from this scenario:
+
+            - **Financing plan:** Shareholders and creditors provided {markdown_money(summary.common_stock + summary.notes_payable)}, establishing the initial resource base and the mix of owner and creditor claims.
+            - **Equipment choice:** Investing {markdown_money(summary.equipment)} in equipment changed the composition of assets and created the investing cash outflow.
+            - **Operating plan:** Revenue and expenses produced {markdown_money(summary.net_income)} of net income and {markdown_money(summary.operating_cash_flow)} of operating cash flow.
+            - **Dividend policy:** {dividend_example}
+            """,
         ),
         (
             "Why do users need four statements instead of one all-purpose report?",
@@ -1066,17 +1098,19 @@ def render_decision_desk() -> None:
         ),
         (
             "Which statement would you examine first as an investor, creditor, or manager—and why?",
-            (
-                "An investor may begin with the income statement, a creditor may begin "
-                "with the balance sheet and cash flows, and a manager may use all four. "
-                "The best starting point depends on the decision the user needs to make."
-            ),
+            """
+            The best starting statement depends on the decision:
+
+            - **Investor deciding whether to buy shares:** Start with the **income statement** to evaluate operating performance, then examine the balance sheet and cash flows for context.
+            - **Creditor deciding whether to approve a loan:** Start with the **balance sheet** to assess existing resources and obligations, then examine the statement of cash flows for repayment capacity.
+            - **Manager deciding whether the company can fund an equipment expansion:** Start with the **statement of cash flows** to understand how cash is being generated and used, then review the balance sheet for available resources and claims.
+            """,
         ),
     )
     for column, (prompt, model_answer) in zip((c1, c2, c3), debrief_items):
         with column:
             with st.expander(f"💬 {prompt}"):
-                st.write(model_answer)
+                st.markdown(model_answer)
 
     can_complete = st.session_state.activity_checked and st.session_state.statement_checked
     st.button(
