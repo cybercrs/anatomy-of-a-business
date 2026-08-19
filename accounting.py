@@ -1,7 +1,7 @@
 """Core accounting model for the Anatomy of a Business demonstration.
 
-The model intentionally uses simple, cash-based Chapter 1 events. It is not a
-journal-entry trainer; it connects business activities to account categories
+The model intentionally uses simple, cash-based introductory events. It is not
+a journal-entry trainer; it connects business activities to account categories
 and the four financial statements.
 """
 
@@ -77,7 +77,7 @@ DIVIDEND_POLICIES = {
 
 @dataclass(frozen=True)
 class BusinessEvent:
-    """A plain-language business event and its Chapter 1 classifications."""
+    """A plain-language business event and its introductory classifications."""
 
     event_id: str
     title: str
@@ -385,4 +385,3 @@ def grade_activity_answers(
         results.append((event, answer, answer == event.activity_type))
     score = sum(is_correct for _, _, is_correct in results)
     return score, results
-

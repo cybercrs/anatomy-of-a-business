@@ -1,4 +1,4 @@
-"""Anatomy of a Business — an interactive ACC 202 Chapter 1 demonstration."""
+"""Anatomy of a Business — an interactive introductory accounting activity."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ PAGES = (
 
 
 st.set_page_config(
-    page_title="Anatomy of a Business | ACC 202",
+    page_title="Anatomy of a Business",
     page_icon="🧩",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -131,7 +131,7 @@ def inject_styles() -> None:
         }}
         .hero h1 {{ color: white; font-size: clamp(2.15rem, 5vw, 4rem); margin: 0; }}
         .hero p {{ color: rgba(255,255,255,.88); font-size: 1.08rem; max-width: 48rem; margin: .65rem 0 0; }}
-        .chapter-pill {{
+        .topic-pill {{
             display: inline-flex;
             margin-top: 1.1rem;
             padding: .35rem .7rem;
@@ -159,7 +159,21 @@ def inject_styles() -> None:
             border-radius: 1rem;
             box-shadow: 0 8px 22px rgba(20,42,66,.06);
         }}
-        .info-card {{ padding: 1.15rem 1.2rem; min-height: 9.3rem; }}
+        .overview-note {{
+            margin: .7rem 0 1rem;
+            padding: .8rem 1rem;
+            border-radius: .8rem;
+            background: #EAF2F8;
+            border-left: 4px solid var(--ud-blue);
+            color: var(--ud-navy);
+        }}
+        .info-card {{
+            padding: 1.15rem 1.2rem;
+            min-height: 9.3rem;
+            background: #F9FBFD;
+            border-style: dashed;
+            box-shadow: none;
+        }}
         .info-card .number {{
             width: 2rem;
             height: 2rem;
@@ -264,7 +278,7 @@ def inject_styles() -> None:
             padding: .4rem 0 1rem;
             margin-bottom: 1rem;
         }}
-        .sidebar-brand .course {{ font-size: .72rem; text-transform: uppercase; letter-spacing: .13em; opacity: .75; }}
+        .sidebar-brand .context {{ font-size: .72rem; text-transform: uppercase; letter-spacing: .13em; opacity: .75; }}
         .sidebar-brand .name {{ font-size: 1.18rem; font-weight: 850; margin-top: .2rem; }}
         .sidebar-progress {{ margin: 1.2rem 0 .5rem; font-size: .82rem; opacity: .8; }}
         .progress-track {{ height: .42rem; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; }}
@@ -311,7 +325,9 @@ def initialize_state() -> None:
         "scenario_choices": None,
         "activity_answers": {},
         "activity_checked": False,
+        "statement_results": {},
         "statement_checked": False,
+        "decision_completed": False,
         "scroll_to_top": False,
     }
     for key, value in defaults.items():
@@ -335,7 +351,9 @@ def launch_scenario() -> None:
     }
     st.session_state.activity_answers = {}
     st.session_state.activity_checked = False
+    st.session_state.statement_results = {}
     st.session_state.statement_checked = False
+    st.session_state.decision_completed = False
     st.session_state.page = PAGES[1]
     st.session_state.scroll_to_top = True
 
@@ -343,6 +361,10 @@ def launch_scenario() -> None:
 def go_to(page: str) -> None:
     st.session_state.page = page
     st.session_state.scroll_to_top = True
+
+
+def complete_activity() -> None:
+    st.session_state.decision_completed = True
 
 
 def request_scroll_top() -> None:
@@ -375,10 +397,10 @@ def hero() -> None:
     st.markdown(
         """
         <div class="hero">
-            <div class="hero-kicker">University of Dayton · ACC 202</div>
+            <div class="hero-kicker">University of Dayton</div>
             <h1>Anatomy of a Business</h1>
             <p>Build a company, follow its activities, and discover how financial statements tell one connected story.</p>
-            <div class="chapter-pill">Chapter 1 · Introduction to Business and Financial Statements</div>
+            <div class="topic-pill">Business Activities · Accounts · Financial Statements</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -390,7 +412,7 @@ def sidebar() -> None:
         st.markdown(
             """
             <div class="sidebar-brand">
-                <div class="course">ACC 202 · Chapter 1</div>
+                <div class="context">Interactive Learning Activity</div>
                 <div class="name">Anatomy of a Business</div>
             </div>
             """,
@@ -404,12 +426,23 @@ def sidebar() -> None:
             on_change=request_scroll_top,
         )
 
-        progress = 25
+        progress = 0
         if st.session_state.scenario_choices:
+            progress = 25
+        if st.session_state.scenario_choices and st.session_state.activity_checked:
             progress = 50
-        if st.session_state.activity_checked:
+        if (
+            st.session_state.scenario_choices
+            and st.session_state.activity_checked
+            and st.session_state.statement_checked
+        ):
             progress = 75
-        if st.session_state.statement_checked:
+        if (
+            st.session_state.scenario_choices
+            and st.session_state.activity_checked
+            and st.session_state.statement_checked
+            and st.session_state.decision_completed
+        ):
             progress = 100
         st.markdown(
             f"""
@@ -419,23 +452,19 @@ def sidebar() -> None:
             unsafe_allow_html=True,
         )
 
-        st.markdown("### Chapter 1 lens")
-        st.caption(
-            "Business activities → account categories → financial statements → decisions"
-        )
-        with st.expander("Quick definitions"):
-            st.markdown(
-                """
-                **Financing:** obtaining or returning funds from owners and creditors  
-                **Investing:** acquiring resources needed to operate  
-                **Operating:** producing and delivering goods or services  
-                **Accounting:** identifying, recording, and communicating economic events
-                """
-            )
         st.button("Start over", on_click=reset_experience, use_container_width=True)
 
 
 def intro_cards() -> None:
+    st.markdown(
+        """
+        <div class="overview-note">
+            <strong>Activity overview</strong><br>
+            These three cards preview what you will do. They are not buttons; make your choices in the sections that follow.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     columns = st.columns(3)
     cards = (
         (
@@ -618,6 +647,7 @@ def render_activity_map() -> None:
             for event in scenario.events
         }
         st.session_state.activity_checked = True
+        st.rerun()
 
     if not st.session_state.activity_checked:
         return
@@ -727,93 +757,163 @@ def render_financial_statements() -> None:
     m3.metric("Ending cash", money(summary.cash))
     m4.metric("Total assets", money(summary.total_assets))
 
-    income_tab, retained_tab, balance_tab, cash_tab, connections_tab = st.tabs(
-        (
-            "1 · Income Statement",
-            "2 · Retained Earnings",
-            "3 · Balance Sheet",
-            "4 · Cash Flows",
-            "Connect the Statements",
-        )
+    statement_names = (
+        "Income Statement",
+        "Retained Earnings",
+        "Balance Sheet",
+        "Statement of Cash Flows",
     )
-    with income_tab:
-        st.markdown(
-            statement_html(
-                "Campus Service Corporation",
-                "Income Statement · For the Year",
-                [
-                    ("Service revenue", summary.revenue, ""),
-                    ("Wages expense", summary.wages_expense, "indent"),
-                    ("Other operating expenses", summary.other_expenses, "indent"),
-                    ("Total expenses", summary.total_expenses, "total"),
-                    ("Net income", summary.net_income, "grand-total"),
-                ],
-            ),
-            unsafe_allow_html=True,
-        )
-        st.info("Question answered: Were the company’s operations successful during the period?")
+    selected_statement = st.radio(
+        "Select a financial statement",
+        statement_names,
+        horizontal=True,
+        key="statement_selection",
+    )
+    st.caption(
+        "Cycle through the statements. The display and its learning question will "
+        "change together."
+    )
 
-    with retained_tab:
-        st.markdown(
-            statement_html(
-                "Campus Service Corporation",
-                "Retained Earnings · For the Year",
-                [
-                    ("Beginning retained earnings", 0, ""),
-                    ("Add: Net income", summary.net_income, ""),
-                    ("Less: Dividends", summary.dividends, "indent"),
-                    ("Ending retained earnings", summary.ending_retained_earnings, "grand-total"),
-                ],
+    statement_questions = {
+        "Income Statement": {
+            "question": "What is the income statement designed to communicate?",
+            "options": (
+                "The success or failure of operations during a period",
+                "The resources and claims at a point in time",
+                "The sources and uses of cash by activity type",
             ),
-            unsafe_allow_html=True,
-        )
-        st.info(
-            "Connection: Net income comes from the income statement. Ending retained "
-            "earnings will appear in stockholders’ equity on the balance sheet."
-        )
-
-    with balance_tab:
-        st.markdown(
-            statement_html(
-                "Campus Service Corporation",
-                "Balance Sheet · End of Year",
-                [
-                    ("Cash", summary.cash, "indent"),
-                    ("Equipment", summary.equipment, "indent"),
-                    ("Total assets", summary.total_assets, "grand-total"),
-                    ("Notes payable", summary.notes_payable, "indent"),
-                    ("Common stock", summary.common_stock, "indent"),
-                    ("Retained earnings", summary.ending_retained_earnings, "indent"),
-                    (
-                        "Total liabilities and stockholders’ equity",
-                        summary.total_liabilities_and_equity,
-                        "grand-total",
-                    ),
-                ],
+            "correct": "The success or failure of operations during a period",
+            "feedback": "Revenue less expenses produces net income or net loss for the period.",
+        },
+        "Retained Earnings": {
+            "question": "Which items explain the change in retained earnings?",
+            "options": (
+                "Net income or net loss and dividends",
+                "Assets purchased and liabilities incurred",
+                "Only cash received from customers",
             ),
-            unsafe_allow_html=True,
-        )
-        st.info("Question answered: What resources and claims exist at this point in time?")
-
-    with cash_tab:
-        st.markdown(
-            statement_html(
-                "Campus Service Corporation",
-                "Statement of Cash Flows · For the Year",
-                [
-                    ("Cash from operating activities", summary.operating_cash_flow, ""),
-                    ("Cash from investing activities", summary.investing_cash_flow, ""),
-                    ("Cash from financing activities", summary.financing_cash_flow, ""),
-                    ("Net change in cash", summary.net_change_in_cash, "total"),
-                    ("Beginning cash", 0, "indent"),
-                    ("Ending cash", summary.cash, "grand-total"),
-                ],
+            "correct": "Net income or net loss and dividends",
+            "feedback": "Net income increases retained earnings, while dividends reduce it.",
+        },
+        "Balance Sheet": {
+            "question": "What relationship should the balance sheet demonstrate?",
+            "options": (
+                "Assets equal liabilities plus stockholders’ equity",
+                "Revenue equals cash received",
+                "Operating cash flow equals net income",
             ),
-            unsafe_allow_html=True,
-        )
-        st.info("Question answered: Where did cash come from, and how was it used?")
+            "correct": "Assets equal liabilities plus stockholders’ equity",
+            "feedback": "The balance sheet presents resources and the creditor and owner claims on them.",
+        },
+        "Statement of Cash Flows": {
+            "question": "How does the statement of cash flows organize cash changes?",
+            "options": (
+                "By operating, investing, and financing activities",
+                "By assets, liabilities, and equity",
+                "By revenues and expenses only",
+            ),
+            "correct": "By operating, investing, and financing activities",
+            "feedback": "The three activity categories explain where cash came from and how it was used.",
+        },
+    }
 
-    with connections_tab:
+    if selected_statement == "Income Statement":
+        statement_markup = statement_html(
+            "Campus Service Corporation",
+            "Income Statement · For the Year",
+            [
+                ("Service revenue", summary.revenue, ""),
+                ("Wages expense", summary.wages_expense, "indent"),
+                ("Other operating expenses", summary.other_expenses, "indent"),
+                ("Total expenses", summary.total_expenses, "total"),
+                ("Net income", summary.net_income, "grand-total"),
+            ],
+        )
+        purpose = "Were the company’s operations successful during the period?"
+    elif selected_statement == "Retained Earnings":
+        statement_markup = statement_html(
+            "Campus Service Corporation",
+            "Retained Earnings · For the Year",
+            [
+                ("Beginning retained earnings", 0, ""),
+                ("Add: Net income", summary.net_income, ""),
+                ("Less: Dividends", summary.dividends, "indent"),
+                ("Ending retained earnings", summary.ending_retained_earnings, "grand-total"),
+            ],
+        )
+        purpose = "How did net income and dividends change retained earnings?"
+    elif selected_statement == "Balance Sheet":
+        statement_markup = statement_html(
+            "Campus Service Corporation",
+            "Balance Sheet · End of Year",
+            [
+                ("Cash", summary.cash, "indent"),
+                ("Equipment", summary.equipment, "indent"),
+                ("Total assets", summary.total_assets, "grand-total"),
+                ("Notes payable", summary.notes_payable, "indent"),
+                ("Common stock", summary.common_stock, "indent"),
+                ("Retained earnings", summary.ending_retained_earnings, "indent"),
+                (
+                    "Total liabilities and stockholders’ equity",
+                    summary.total_liabilities_and_equity,
+                    "grand-total",
+                ),
+            ],
+        )
+        purpose = "What resources and claims exist at this point in time?"
+    else:
+        statement_markup = statement_html(
+            "Campus Service Corporation",
+            "Statement of Cash Flows · For the Year",
+            [
+                ("Cash from operating activities", summary.operating_cash_flow, ""),
+                ("Cash from investing activities", summary.investing_cash_flow, ""),
+                ("Cash from financing activities", summary.financing_cash_flow, ""),
+                ("Net change in cash", summary.net_change_in_cash, "total"),
+                ("Beginning cash", 0, "indent"),
+                ("Ending cash", summary.cash, "grand-total"),
+            ],
+        )
+        purpose = "Where did cash come from, and how was it used?"
+
+    st.markdown(statement_markup, unsafe_allow_html=True)
+    st.info(f"Question answered by this statement: {purpose}")
+
+    question_data = statement_questions[selected_statement]
+    question_key = selected_statement.lower().replace(" ", "_")
+    st.markdown(f"#### Check your understanding: {selected_statement}")
+    selected_answer = st.radio(
+        question_data["question"],
+        question_data["options"],
+        key=f"statement_answer_{question_key}",
+    )
+    if st.button(
+        "Check this statement",
+        key=f"check_statement_{question_key}",
+        type="primary",
+    ):
+        updated_results = dict(st.session_state.statement_results)
+        updated_results[selected_statement] = selected_answer == question_data["correct"]
+        st.session_state.statement_results = updated_results
+        st.session_state.statement_checked = len(updated_results) == len(statement_names)
+        st.rerun()
+
+    if selected_statement in st.session_state.statement_results:
+        if st.session_state.statement_results[selected_statement]:
+            st.success(question_data["feedback"])
+        else:
+            st.warning(
+                f"Take another look. The best answer is: {question_data['correct']}. "
+                f"{question_data['feedback']}"
+            )
+
+    statements_completed = len(st.session_state.statement_results)
+    st.progress(statements_completed / len(statement_names))
+    st.caption(f"Statements explored: {statements_completed} of {len(statement_names)}")
+    if st.session_state.statement_checked:
+        st.success("All four statement questions have been explored.")
+
+    with st.expander("See how the four statements connect"):
         st.markdown(
             f"""
             <div class="flow">
@@ -826,32 +926,10 @@ def render_financial_statements() -> None:
             unsafe_allow_html=True,
         )
         st.write(
-            "The statements answer different questions, but they describe the same "
-            "business. That is why amounts reappear and connect across statements."
+            "For a natural flow, the income statement should be prepared first because "
+            "its net income becomes an input to retained earnings. The statements answer "
+            "different questions, but they describe the same business."
         )
-
-    st.subheader("Statement checkpoint")
-    with st.form("statement_checkpoint"):
-        first_statement = st.radio(
-            "Which statement must be prepared first?",
-            ("Balance Sheet", "Income Statement", "Statement of Cash Flows"),
-            horizontal=True,
-        )
-        connection = st.radio(
-            "Where does ending retained earnings appear next?",
-            ("As an expense", "In stockholders’ equity", "As financing revenue"),
-            horizontal=True,
-        )
-        checked = st.form_submit_button("Check the connections", type="primary")
-    if checked:
-        st.session_state.statement_checked = True
-        if first_statement == "Income Statement" and connection == "In stockholders’ equity":
-            st.success("Both connections are correct. You have reconstructed the reporting sequence.")
-        else:
-            st.warning(
-                "Review the flow: the income statement produces net income; retained "
-                "earnings then becomes part of stockholders’ equity on the balance sheet."
-            )
 
     st.button(
         "Enter the Decision Desk →",
@@ -916,8 +994,10 @@ def render_decision_desk() -> None:
             "How did our financing, investing, and operating choices shape the business?",
             "All four statements plus detailed internal reports",
             (
-                f"Operations generated {money(summary.operating_cash_flow)} of cash; "
-                f"the company invested {money(abs(summary.investing_cash_flow))} in equipment."
+                f"Financing activities produced a net cash inflow of "
+                f"{money(summary.financing_cash_flow)}; operations generated "
+                f"{money(summary.operating_cash_flow)} of cash; and the company invested "
+                f"{money(abs(summary.investing_cash_flow))} in equipment."
             ),
         )
 
@@ -949,23 +1029,59 @@ def render_decision_desk() -> None:
             st.write(text)
 
     st.subheader("Class debrief")
+    st.caption("Select a question to reveal a model answer.")
     c1, c2, c3 = st.columns(3)
-    prompts = (
-        "Which business choice changed the company’s financial position most?",
-        "Why do users need four statements instead of one all-purpose report?",
-        "Which statement would you examine first as an investor, creditor, or manager—and why?",
+    debrief_items = (
+        (
+            "Which business choice changed the company’s financial position most?",
+            (
+                f"The financing plan established the company’s initial resource base: "
+                f"shareholders and creditors provided {money(summary.common_stock + summary.notes_payable)}. "
+                "A different answer can also be well supported if it explains how an "
+                "operating or investing choice changed both the numbers and the business."
+            ),
+        ),
+        (
+            "Why do users need four statements instead of one all-purpose report?",
+            (
+                "Each statement answers a different question. The income statement "
+                "explains performance, retained earnings explains accumulated earnings "
+                "kept in the business, the balance sheet shows resources and claims at a "
+                "point in time, and the statement of cash flows explains cash activity."
+            ),
+        ),
+        (
+            "Which statement would you examine first as an investor, creditor, or manager—and why?",
+            (
+                "An investor may begin with the income statement, a creditor may begin "
+                "with the balance sheet and cash flows, and a manager may use all four. "
+                "The best starting point depends on the decision the user needs to make."
+            ),
+        ),
     )
-    for column, prompt in zip((c1, c2, c3), prompts):
+    for column, (prompt, model_answer) in zip((c1, c2, c3), debrief_items):
         with column:
-            st.markdown(
-                f'<div class="info-card"><div class="number">?</div><p>{escape(prompt)}</p></div>',
-                unsafe_allow_html=True,
-            )
+            with st.expander(f"💬 {prompt}"):
+                st.write(model_answer)
 
-    st.success(
-        "You completed the anatomy: business decisions created activities; activities "
-        "affected accounts; accounts formed statements; statements supported decisions."
+    can_complete = st.session_state.activity_checked and st.session_state.statement_checked
+    st.button(
+        "Complete the activity",
+        type="primary",
+        on_click=complete_activity,
+        use_container_width=True,
+        disabled=not can_complete,
     )
+    if not can_complete:
+        st.caption(
+            "Complete the Activity Map and all four financial statement questions "
+            "before finishing the learning journey."
+        )
+    if st.session_state.decision_completed:
+        st.success(
+            "You completed the anatomy: business decisions created activities; activities "
+            "affected accounts; accounts formed statements; statements supported decisions."
+        )
 
 
 inject_styles()

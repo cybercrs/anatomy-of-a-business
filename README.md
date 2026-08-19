@@ -1,9 +1,9 @@
 # Anatomy of a Business
 
-An interactive Streamlit demonstration for ACC 202 Chapter 1 at the University
-of Dayton. Students launch a simple corporation, classify its financing,
-investing, and operating activities, inspect four connected financial
-statements, and consider how different users interpret the information.
+An interactive introductory accounting demonstration for the University of
+Dayton. Students launch a simple corporation, classify its financing, investing,
+and operating activities, inspect four connected financial statements, and
+consider how different users interpret the information.
 
 ## Learning flow
 
@@ -65,4 +65,3 @@ execution model.
 The visual theme uses a University of Dayton-inspired red and blue palette for
 an internal course activity. It does not include or reproduce an institutional
 or athletics logo.
-
