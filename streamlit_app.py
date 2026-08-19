@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from html import escape
+import random
 
 import streamlit as st
 
@@ -34,7 +35,7 @@ PAGES = (
     "3 · Financial Statements",
     "4 · Decision Desk",
 )
-STATEMENT_QUESTION_REVISION = 2
+STATEMENT_QUESTION_REVISION = 3
 
 
 st.set_page_config(
@@ -135,18 +136,6 @@ def inject_styles() -> None:
         }}
         .hero h1 {{ color: white; font-size: clamp(2.15rem, 5vw, 4rem); margin: 0; }}
         .hero p {{ color: rgba(255,255,255,.88); font-size: 1.08rem; max-width: 48rem; margin: .65rem 0 0; }}
-        .topic-pill {{
-            display: inline-flex;
-            margin-top: 1.1rem;
-            padding: .35rem .7rem;
-            border: 1px solid rgba(255,255,255,.3);
-            border-radius: 999px;
-            background: rgba(255,255,255,.1);
-            color: white;
-            font-size: .82rem;
-            font-weight: 700;
-        }}
-
         .section-lead {{ color: var(--muted); font-size: 1.02rem; max-width: 52rem; margin-top: -.45rem; }}
         .eyebrow {{
             color: var(--ud-red);
@@ -334,6 +323,18 @@ def clear_statement_widget_state() -> None:
         "statement_answer_statement_of_cash_flows",
     ):
         st.session_state.pop(key, None)
+    for key in list(st.session_state):
+        if key.startswith("choice_order_statement_"):
+            st.session_state.pop(key, None)
+
+
+def clear_activity_widget_state() -> None:
+    for key in list(st.session_state):
+        if key.startswith("choice_order_activity_") or (
+            key.startswith("activity_")
+            and key not in {"activity_answers", "activity_checked"}
+        ):
+            st.session_state.pop(key, None)
 
 
 def initialize_state() -> None:
@@ -376,6 +377,7 @@ def launch_scenario() -> None:
         "operating_plan": st.session_state.operating_choice,
         "dividend_policy": st.session_state.dividend_choice,
     }
+    clear_activity_widget_state()
     st.session_state.activity_answers = {}
     st.session_state.activity_checked = False
     clear_statement_widget_state()
@@ -427,6 +429,21 @@ def markdown_money(value: int) -> str:
     return money(value).replace("$", r"\$")
 
 
+def shuffled_options(question_key: str, options: tuple[str, ...]) -> tuple[str, ...]:
+    """Shuffle once per activity instance and preserve the order across reruns."""
+
+    state_key = f"choice_order_{question_key}"
+    existing_order = st.session_state.get(state_key)
+    if (
+        existing_order is None
+        or len(existing_order) != len(options)
+        or set(existing_order) != set(options)
+    ):
+        existing_order = tuple(random.sample(options, k=len(options)))
+        st.session_state[state_key] = existing_order
+    return tuple(existing_order)
+
+
 def hero() -> None:
     st.markdown(
         """
@@ -434,7 +451,6 @@ def hero() -> None:
             <div class="hero-kicker">University of Dayton</div>
             <h1>Anatomy of a Business</h1>
             <p>Build a company, follow its activities, and discover how financial statements tell one connected story.</p>
-            <div class="topic-pill">Business Activities · Accounts · Financial Statements</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -546,7 +562,10 @@ def render_launch_lab() -> None:
     )
     answer = st.radio(
         "Choose an organization",
-        ("Sole proprietorship", "Partnership", "Corporation"),
+        shuffled_options(
+            "organization",
+            ("Sole proprietorship", "Partnership", "Corporation"),
+        ),
         horizontal=True,
         key="organization_answer",
     )
@@ -665,7 +684,8 @@ def render_activity_map() -> None:
             with right:
                 st.selectbox(
                     f"Classify event {index}",
-                    ("Not sure yet",) + ACTIVITY_TYPES,
+                    ("Not sure yet",)
+                    + shuffled_options(f"activity_{event.event_id}", ACTIVITY_TYPES),
                     key=f"activity_{event.event_id}",
                 )
         submitted = st.form_submit_button(
@@ -811,11 +831,11 @@ def render_financial_statements() -> None:
         "Income Statement": {
             "question": "Which conclusion is supported by this income statement?",
             "options": (
-                f"The company’s cash increased by {money(summary.net_income)} because net income and cash change are the same.",
-                f"The company earned net income of {money(summary.net_income)} from its operations during the year.",
-                f"The company ended the year with total assets of {money(summary.net_income)}.",
+                f"The company’s cash increased by {markdown_money(summary.net_income)} because net income and cash change are the same.",
+                f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
+                f"The company ended the year with total assets of {markdown_money(summary.net_income)}.",
             ),
-            "correct": f"The company earned net income of {money(summary.net_income)} from its operations during the year.",
+            "correct": f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
             "feedback": (
                 "The statement supports a conclusion about operating performance. "
                 "It does not, by itself, explain the change in cash or total assets."
@@ -836,13 +856,13 @@ def render_financial_statements() -> None:
             ),
         },
         "Balance Sheet": {
-            "question": f"Which statement best explains how the company financed its {money(summary.total_assets)} of assets?",
+            "question": f"Which statement best explains how the company financed its {markdown_money(summary.total_assets)} of assets?",
             "options": (
                 "Cash and equipment identify the outside sources that financed all of the company’s assets.",
-                f"Creditors have claims of {money(summary.notes_payable)}, and shareholders have claims of {money(summary.common_stock + summary.ending_retained_earnings)}.",
-                f"Revenue of {money(summary.revenue)} and expenses of {money(summary.total_expenses)} account for all claims on the assets.",
+                f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
+                f"Revenue of {markdown_money(summary.revenue)} and expenses of {markdown_money(summary.total_expenses)} account for all claims on the assets.",
             ),
-            "correct": f"Creditors have claims of {money(summary.notes_payable)}, and shareholders have claims of {money(summary.common_stock + summary.ending_retained_earnings)}.",
+            "correct": f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
             "feedback": (
                 "Assets are the resources. Liabilities and stockholders’ equity "
                 "identify the creditor and owner claims that financed those resources."
@@ -931,7 +951,7 @@ def render_financial_statements() -> None:
     st.markdown(f"#### Check your understanding: {selected_statement}")
     selected_answer = st.radio(
         question_data["question"],
-        question_data["options"],
+        shuffled_options(f"statement_{question_key}", question_data["options"]),
         key=f"statement_answer_{question_key}",
     )
     if st.button(
@@ -947,14 +967,12 @@ def render_financial_statements() -> None:
 
     if selected_statement in st.session_state.statement_results:
         if st.session_state.statement_results[selected_statement]:
-            st.markdown(
-                f'<div class="answer-feedback"><strong>Correct.</strong> {escape(question_data["feedback"])}</div>',
-                unsafe_allow_html=True,
-            )
+            st.success(f"Correct. {question_data['feedback']}")
         else:
+            correct_answer = question_data["correct"].replace(r"\$", "$")
             st.markdown(
                 '<div class="answer-feedback">'
-                f'<strong>Review.</strong> The best answer is “{escape(question_data["correct"])}” '
+                f'<strong>Review.</strong> The best answer is “{escape(correct_answer)}” '
                 f'{escape(question_data["feedback"])}</div>',
                 unsafe_allow_html=True,
             )
