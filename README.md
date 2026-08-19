@@ -5,6 +5,10 @@ Dayton. Students launch a simple corporation, classify its financing, investing,
 and operating activities, inspect four connected financial statements, and
 consider how different users interpret the information.
 
+**Live app:** [anatomy-of-a-business.streamlit.app](https://anatomy-of-a-business.streamlit.app/)
+
+**Source:** [github.com/cybercrs/anatomy-of-a-business](https://github.com/cybercrs/anatomy-of-a-business)
+
 ## Learning flow
 
 1. **Launch Lab** — choose a simple first-year business plan.
@@ -34,13 +38,12 @@ Run the domain tests:
 python -m unittest discover -s tests -v
 ```
 
-## Deploy with GitHub and Streamlit Community Cloud
+## Deployment
 
-1. Create a GitHub repository and push this folder to its `main` branch.
-2. In Streamlit Community Cloud, select the repository and branch.
-3. Set the entrypoint to `streamlit_app.py`.
-4. In Advanced settings, select Python 3.12.
-5. Deploy. No secrets or external services are required for this draft.
+The app is deployed through Streamlit Community Cloud from the `main` branch of
+the public GitHub repository. The entrypoint is `streamlit_app.py`, and pushes
+to `main` trigger a new deployment. No secrets or external services are
+required.
 
 The root-level `requirements.txt`, `streamlit_app.py`, and
 `.streamlit/config.toml` are arranged for Community Cloud's repository-root
