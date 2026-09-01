@@ -21,6 +21,15 @@ consider how different users interpret the information.
 The scenario intentionally uses straightforward, cash-based events. It does not
 teach journal entries or accrual-accounting timing.
 
+## Refresh recovery
+
+The app stores a compact, versioned snapshot of the current activity in the
+browser URL. If a Streamlit session disconnects, refreshing the same page
+restores the selected station, business choices, submitted activity map, and
+financial-statement progress. The snapshot contains no name, account, or other
+identifying information. Selecting **Start over** replaces it with a new
+activity state.
+
 ## Run locally
 
 Python 3.12 is recommended to match Streamlit Community Cloud's default.

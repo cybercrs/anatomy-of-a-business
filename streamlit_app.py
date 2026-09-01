@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from html import escape
 import random
+from typing import Any
 
 import streamlit as st
 
@@ -19,6 +20,7 @@ from accounting import (
     calculate_summary,
     grade_activity_answers,
 )
+from resume_state import decode_resume_state, encode_resume_state
 
 
 UD_RED = "#CE1141"
@@ -35,7 +37,15 @@ PAGES = (
     "3 · Financial Statements",
     "4 · Decision Desk",
 )
+STATEMENT_NAMES = (
+    "Income Statement",
+    "Retained Earnings",
+    "Balance Sheet",
+    "Statement of Cash Flows",
+)
 STATEMENT_QUESTION_REVISION = 3
+RESUME_QUERY_PARAM = "progress"
+RESUME_SESSION_KEY = "_resume_state_loaded"
 
 
 st.set_page_config(
@@ -363,11 +373,174 @@ def initialize_state() -> None:
         st.session_state.statement_question_revision = STATEMENT_QUESTION_REVISION
 
 
+def _valid_choice(value: object, choices: object, default: str) -> str:
+    return value if isinstance(value, str) and value in choices else default
+
+
+def restore_progress_from_url() -> None:
+    """Restore a validated snapshot once when a browser refresh creates a new session."""
+
+    if st.session_state.get(RESUME_SESSION_KEY):
+        return
+
+    saved = decode_resume_state(st.query_params.get(RESUME_QUERY_PARAM))
+    st.session_state[RESUME_SESSION_KEY] = True
+    if saved is None:
+        return
+
+    funding = _valid_choice(saved.get("funding"), FUNDING_PLANS, "Balanced")
+    asset = _valid_choice(saved.get("asset"), ASSET_PLANS, "Essential setup")
+    operating = _valid_choice(
+        saved.get("operating"), OPERATING_PLANS, "Balanced growth"
+    )
+    dividend = _valid_choice(
+        saved.get("dividend"),
+        DIVIDEND_POLICIES,
+        "Return some value to shareholders",
+    )
+    st.session_state.funding_choice = funding
+    st.session_state.asset_choice = asset
+    st.session_state.operating_choice = operating
+    st.session_state.dividend_choice = dividend
+
+    organization_answer = saved.get("organization_answer")
+    if organization_answer in {"Sole proprietorship", "Partnership", "Corporation"}:
+        st.session_state.organization_answer = organization_answer
+    st.session_state.organization_checked = bool(saved.get("organization_checked"))
+
+    launched = saved.get("launched") is True
+    if launched:
+        st.session_state.scenario_choices = {
+            "funding_plan": funding,
+            "asset_plan": asset,
+            "operating_plan": operating,
+            "dividend_policy": dividend,
+        }
+        scenario = current_scenario()
+        event_ids = {event.event_id for event in scenario.events}
+        valid_activity_answers = set(ACTIVITY_TYPES) | {"Not sure yet"}
+
+        saved_answers = saved.get("activity_answers")
+        if isinstance(saved_answers, dict):
+            activity_answers = {
+                event_id: answer
+                for event_id, answer in saved_answers.items()
+                if event_id in event_ids and answer in valid_activity_answers
+            }
+        else:
+            activity_answers = {}
+        st.session_state.activity_answers = activity_answers
+        st.session_state.activity_checked = (
+            saved.get("activity_checked") is True
+            and set(activity_answers) == event_ids
+        )
+
+        saved_selections = saved.get("activity_selections")
+        if not isinstance(saved_selections, dict):
+            saved_selections = {}
+        for event_id in event_ids:
+            answer = saved_selections.get(event_id, activity_answers.get(event_id))
+            if answer in valid_activity_answers:
+                st.session_state[f"activity_{event_id}"] = answer
+
+        summary = calculate_summary(scenario)
+        questions = statement_question_data(summary)
+        saved_statement_answers = saved.get("statement_answers")
+        if not isinstance(saved_statement_answers, dict):
+            saved_statement_answers = {}
+
+        saved_results = saved.get("statement_results")
+        if isinstance(saved_results, dict):
+            statement_results = {
+                name: result
+                for name, result in saved_results.items()
+                if name in STATEMENT_NAMES and type(result) is bool
+            }
+        else:
+            statement_results = {}
+        st.session_state.statement_results = statement_results
+        st.session_state.statement_checked = len(statement_results) == len(STATEMENT_NAMES)
+
+        selected_statement = saved.get("statement_selection")
+        if selected_statement in STATEMENT_NAMES:
+            st.session_state.statement_selection = selected_statement
+        for name, question in questions.items():
+            answer = saved_statement_answers.get(name)
+            if answer in question["options"]:
+                st.session_state[statement_answer_key(name)] = answer
+
+        st.session_state.decision_completed = (
+            saved.get("decision_completed") is True
+            and st.session_state.activity_checked
+            and st.session_state.statement_checked
+        )
+
+    page_index = saved.get("page")
+    if type(page_index) is int and 0 <= page_index < len(PAGES):
+        requested_page = PAGES[page_index]
+        if launched or requested_page == PAGES[0]:
+            st.session_state.page = requested_page
+    st.session_state.statement_question_revision = STATEMENT_QUESTION_REVISION
+
+
+def progress_snapshot() -> dict[str, Any]:
+    """Collect only the non-sensitive fields needed to resume this activity."""
+
+    page = st.session_state.get("page", PAGES[0])
+    scenario_choices = st.session_state.get("scenario_choices") or {}
+    activity_selections = {
+        key.removeprefix("activity_"): value
+        for key, value in st.session_state.items()
+        if key.startswith("activity_")
+        and key not in {"activity_answers", "activity_checked"}
+        and isinstance(value, str)
+    }
+    statement_answers = {
+        name: st.session_state[statement_answer_key(name)]
+        for name in STATEMENT_NAMES
+        if statement_answer_key(name) in st.session_state
+    }
+    return {
+        "page": PAGES.index(page) if page in PAGES else 0,
+        "funding": scenario_choices.get(
+            "funding_plan", st.session_state.get("funding_choice")
+        ),
+        "asset": scenario_choices.get(
+            "asset_plan", st.session_state.get("asset_choice")
+        ),
+        "operating": scenario_choices.get(
+            "operating_plan", st.session_state.get("operating_choice")
+        ),
+        "dividend": scenario_choices.get(
+            "dividend_policy", st.session_state.get("dividend_choice")
+        ),
+        "organization_answer": st.session_state.get("organization_answer"),
+        "organization_checked": bool(st.session_state.get("organization_checked")),
+        "launched": bool(st.session_state.get("scenario_choices")),
+        "activity_selections": activity_selections,
+        "activity_answers": dict(st.session_state.get("activity_answers", {})),
+        "activity_checked": bool(st.session_state.get("activity_checked")),
+        "statement_selection": st.session_state.get("statement_selection"),
+        "statement_answers": statement_answers,
+        "statement_results": dict(st.session_state.get("statement_results", {})),
+        "decision_completed": bool(st.session_state.get("decision_completed")),
+    }
+
+
+def save_progress_to_url() -> None:
+    """Keep the current activity snapshot in the browser URL for refresh recovery."""
+
+    token = encode_resume_state(progress_snapshot())
+    if st.query_params.get(RESUME_QUERY_PARAM) != token:
+        st.query_params[RESUME_QUERY_PARAM] = token
+
+
 def reset_experience() -> None:
     for key in list(st.session_state):
         del st.session_state[key]
     st.session_state.page = PAGES[0]
     st.session_state.scroll_to_top = True
+    st.session_state[RESUME_SESSION_KEY] = True
 
 
 def launch_scenario() -> None:
@@ -427,6 +600,70 @@ def markdown_money(value: int) -> str:
     """Keep currency values from being interpreted as inline math in Markdown."""
 
     return money(value).replace("$", r"\$")
+
+
+def statement_answer_key(statement_name: str) -> str:
+    question_key = statement_name.lower().replace(" ", "_")
+    return f"statement_answer_{question_key}"
+
+
+def statement_question_data(summary: FinancialSummary) -> dict[str, dict[str, Any]]:
+    return {
+        "Income Statement": {
+            "question": "Which conclusion is supported by this income statement?",
+            "options": (
+                f"The company’s cash increased by {markdown_money(summary.net_income)} because net income and cash change are the same.",
+                f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
+                f"The company ended the year with total assets of {markdown_money(summary.net_income)}.",
+            ),
+            "correct": f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
+            "feedback": (
+                "The statement supports a conclusion about operating performance. "
+                "It does not, by itself, explain the change in cash or total assets."
+            ),
+        },
+        "Retained Earnings": {
+            "question": "Which statement best defines retained earnings?",
+            "options": (
+                "Cash that management has formally reserved for future business use.",
+                "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
+                "Amounts received from shareholders in exchange for common stock.",
+            ),
+            "correct": "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
+            "feedback": (
+                "Retained earnings represents cumulative earnings kept in the business. "
+                "It is not a cash reserve, and shareholder contributions are reported "
+                "separately as common stock."
+            ),
+        },
+        "Balance Sheet": {
+            "question": f"Which statement best explains how the company financed its {markdown_money(summary.total_assets)} of assets?",
+            "options": (
+                "Cash and equipment identify the outside sources that financed all of the company’s assets.",
+                f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
+                f"Revenue of {markdown_money(summary.revenue)} and expenses of {markdown_money(summary.total_expenses)} account for all claims on the assets.",
+            ),
+            "correct": f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
+            "feedback": (
+                "Assets are the resources. Liabilities and stockholders’ equity "
+                "identify the creditor and owner claims that financed those resources."
+            ),
+        },
+        "Statement of Cash Flows": {
+            "question": "What does the statement of cash flows add to the financial picture?",
+            "options": (
+                "It measures operating success by comparing revenues with expenses.",
+                "It reports the company’s resources and the creditor and owner claims on those resources at a point in time.",
+                "It explains how operating, investing, and financing activities changed cash during the period.",
+            ),
+            "correct": "It explains how operating, investing, and financing activities changed cash during the period.",
+            "feedback": (
+                "The statement of cash flows explains the change in cash by business "
+                "activity. Profitability and financial position are communicated by "
+                "other statements."
+            ),
+        },
+    }
 
 
 def shuffled_options(question_key: str, options: tuple[str, ...]) -> tuple[str, ...]:
@@ -501,6 +738,8 @@ def sidebar() -> None:
             """,
             unsafe_allow_html=True,
         )
+
+        st.caption("Progress is saved as you work. Refresh this page to return to your place.")
 
         st.button("Start over", on_click=reset_experience, use_container_width=True)
 
@@ -700,7 +939,6 @@ def render_activity_map() -> None:
             for event in scenario.events
         }
         st.session_state.activity_checked = True
-        st.rerun()
 
     if not st.session_state.activity_checked:
         return
@@ -810,15 +1048,9 @@ def render_financial_statements() -> None:
     m3.metric("Ending cash", money(summary.cash))
     m4.metric("Total assets", money(summary.total_assets))
 
-    statement_names = (
-        "Income Statement",
-        "Retained Earnings",
-        "Balance Sheet",
-        "Statement of Cash Flows",
-    )
     selected_statement = st.radio(
         "Select a financial statement",
-        statement_names,
+        STATEMENT_NAMES,
         horizontal=True,
         key="statement_selection",
     )
@@ -827,62 +1059,7 @@ def render_financial_statements() -> None:
         "change together."
     )
 
-    statement_questions = {
-        "Income Statement": {
-            "question": "Which conclusion is supported by this income statement?",
-            "options": (
-                f"The company’s cash increased by {markdown_money(summary.net_income)} because net income and cash change are the same.",
-                f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
-                f"The company ended the year with total assets of {markdown_money(summary.net_income)}.",
-            ),
-            "correct": f"The company earned net income of {markdown_money(summary.net_income)} from its operations during the year.",
-            "feedback": (
-                "The statement supports a conclusion about operating performance. "
-                "It does not, by itself, explain the change in cash or total assets."
-            ),
-        },
-        "Retained Earnings": {
-            "question": "Which statement best defines retained earnings?",
-            "options": (
-                "Cash that management has formally reserved for future business use.",
-                "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
-                "Amounts received from shareholders in exchange for common stock.",
-            ),
-            "correct": "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
-            "feedback": (
-                "Retained earnings represents cumulative earnings kept in the business. "
-                "It is not a cash reserve, and shareholder contributions are reported "
-                "separately as common stock."
-            ),
-        },
-        "Balance Sheet": {
-            "question": f"Which statement best explains how the company financed its {markdown_money(summary.total_assets)} of assets?",
-            "options": (
-                "Cash and equipment identify the outside sources that financed all of the company’s assets.",
-                f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
-                f"Revenue of {markdown_money(summary.revenue)} and expenses of {markdown_money(summary.total_expenses)} account for all claims on the assets.",
-            ),
-            "correct": f"Creditors have claims of {markdown_money(summary.notes_payable)}, and shareholders have claims of {markdown_money(summary.common_stock + summary.ending_retained_earnings)}.",
-            "feedback": (
-                "Assets are the resources. Liabilities and stockholders’ equity "
-                "identify the creditor and owner claims that financed those resources."
-            ),
-        },
-        "Statement of Cash Flows": {
-            "question": "What does the statement of cash flows add to the financial picture?",
-            "options": (
-                "It measures operating success by comparing revenues with expenses.",
-                "It reports the company’s resources and the creditor and owner claims on those resources at a point in time.",
-                "It explains how operating, investing, and financing activities changed cash during the period.",
-            ),
-            "correct": "It explains how operating, investing, and financing activities changed cash during the period.",
-            "feedback": (
-                "The statement of cash flows explains the change in cash by business "
-                "activity. Profitability and financial position are communicated by "
-                "other statements."
-            ),
-        },
-    }
+    statement_questions = statement_question_data(summary)
 
     if selected_statement == "Income Statement":
         statement_markup = statement_html(
@@ -952,7 +1129,7 @@ def render_financial_statements() -> None:
     selected_answer = st.radio(
         question_data["question"],
         shuffled_options(f"statement_{question_key}", question_data["options"]),
-        key=f"statement_answer_{question_key}",
+        key=statement_answer_key(selected_statement),
     )
     if st.button(
         "Check this statement",
@@ -962,8 +1139,7 @@ def render_financial_statements() -> None:
         updated_results = dict(st.session_state.statement_results)
         updated_results[selected_statement] = selected_answer == question_data["correct"]
         st.session_state.statement_results = updated_results
-        st.session_state.statement_checked = len(updated_results) == len(statement_names)
-        st.rerun()
+        st.session_state.statement_checked = len(updated_results) == len(STATEMENT_NAMES)
 
     if selected_statement in st.session_state.statement_results:
         if st.session_state.statement_results[selected_statement]:
@@ -978,8 +1154,8 @@ def render_financial_statements() -> None:
             )
 
     statements_completed = len(st.session_state.statement_results)
-    st.progress(statements_completed / len(statement_names))
-    st.caption(f"Statements explored: {statements_completed} of {len(statement_names)}")
+    st.progress(statements_completed / len(STATEMENT_NAMES))
+    st.caption(f"Statements explored: {statements_completed} of {len(STATEMENT_NAMES)}")
     if st.session_state.statement_checked:
         st.success("All four statement questions have been explored.")
 
@@ -1172,6 +1348,7 @@ def render_decision_desk() -> None:
 
 inject_styles()
 initialize_state()
+restore_progress_from_url()
 sidebar()
 apply_pending_scroll()
 hero()
@@ -1184,3 +1361,5 @@ elif st.session_state.page == PAGES[2]:
     render_financial_statements()
 else:
     render_decision_desk()
+
+save_progress_to_url()
