@@ -1,0 +1,31 @@
+test_activity_grading_uses_business_purpose (test_accounting.ScenarioTests.test_activity_grading_uses_business_purpose) ... ok
+test_cash_flow_reconciles_to_balance_sheet_cash (test_accounting.ScenarioTests.test_cash_flow_reconciles_to_balance_sheet_cash) ... ok
+test_dividends_are_not_an_expense (test_accounting.ScenarioTests.test_dividends_are_not_an_expense) ... ok
+test_every_scenario_balances (test_accounting.ScenarioTests.test_every_scenario_balances) ... ok
+test_retained_earnings_uses_net_income_and_dividends (test_accounting.ScenarioTests.test_retained_earnings_uses_net_income_and_dividends) ... ok
+test_scenarios_cover_all_three_activity_types (test_accounting.ScenarioTests.test_scenarios_cover_all_three_activity_types) ... ok
+test_all_stations_and_statement_review (test_browser_flow.CompleteBrowserLessonTests.test_all_stations_and_statement_review) ... 2026-10-10 16:10:41.771 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:42.417 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:42.418 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:42.418 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:42.418 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_move_changes_only_view (test_browser_navigation.BrowserNavigationTests.test_move_changes_only_view) ... ok
+test_review_refresh_and_future_view (test_browser_navigation.BrowserNavigationTests.test_review_refresh_and_future_view) ... 2026-10-10 16:10:43.044 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:43.720 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_unearned_legacy_station_is_clamped (test_browser_navigation.LegacyBookmarkTests.test_unearned_legacy_station_is_clamped) ... ok
+test_invalid_tokens_are_ignored (test_resume_state.ResumeStateTests.test_invalid_tokens_are_ignored) ... ok
+test_oversized_state_is_rejected (test_resume_state.ResumeStateTests.test_oversized_state_is_rejected) ... ok
+test_round_trip_preserves_json_state (test_resume_state.ResumeStateTests.test_round_trip_preserves_json_state) ... ok
+test_unknown_version_is_ignored (test_resume_state.ResumeStateTests.test_unknown_version_is_ignored) ... ok
+test_income_statement_progress_survives_a_new_session (test_streamlit_app.StreamlitFlowTests.test_income_statement_progress_survives_a_new_session) ... 2026-10-10 16:10:44.087 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 16:10:45.019 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_start_over_replaces_saved_progress (test_streamlit_app.StreamlitFlowTests.test_start_over_replaces_saved_progress) ... 2026-10-10 16:10:45.434 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 4.228s
+
+OK
