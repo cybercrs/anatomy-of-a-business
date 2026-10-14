@@ -1,0 +1,18 @@
+✔ all 36 financial plans match independent Python event and summary outcomes (18.005072ms)
+✔ legacy version-1 bookmarks retain earned stations and submitted work (7.527406ms)
+✔ native snapshots are decoded without loss by the unchanged Python codec (85.045948ms)
+✔ incorrect activity and statement answers retain the original explored-only gates (0.361768ms)
+✔ repeated checks replace only the original results; drafts remain distinct from submitted answers (1.485118ms)
+✔ every review station rejects every progress mutation independently of its controls (0.868916ms)
+✔ future views and legacy unearned station requests are clamped; malformed links reset safely (1.019194ms)
+✔ reset and independent instances preserve old copied bookmarks (3.406248ms)
+✔ shuffle retains every original option and the original per-instance permutation semantics (11.532812ms)
+✔ every captured lesson variant contains no provisional student-facing branding (38.705412ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 571.714139

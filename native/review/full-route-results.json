@@ -1,0 +1,74 @@
+{
+  "url": "http://127.0.0.1:35163/anatomy-of-a-business/js/",
+  "conditions": "Local loopback; Chromium; external requests blocked; no hosted proxy bypass.",
+  "completion_bookmark": "http://127.0.0.1:35163/anatomy-of-a-business/js/?progress=eyJzdGF0ZSI6eyJhY3Rpdml0eV9hbnN3ZXJzIjp7ImJhbmtfbG9hbiI6IkZpbmFuY2luZyIsImJ1eV9lcXVpcG1lbnQiOiJJbnZlc3RpbmciLCJpc3N1ZV9zdG9jayI6IkZpbmFuY2luZyIsInBheV9kaXZpZGVuZCI6IkZpbmFuY2luZyIsInBheV9lbXBsb3llZXMiOiJPcGVyYXRpbmciLCJwYXlfb3BlcmF0aW5nX2Nvc3RzIjoiT3BlcmF0aW5nIiwic2VydmVfY3VzdG9tZXJzIjoiT3BlcmF0aW5nIn0sImFjdGl2aXR5X2NoZWNrZWQiOnRydWUsImFjdGl2aXR5X3NlbGVjdGlvbnMiOnsiYmFua19sb2FuIjoiRmluYW5jaW5nIiwiYnV5X2VxdWlwbWVudCI6IkludmVzdGluZyIsImlzc3VlX3N0b2NrIjoiRmluYW5jaW5nIiwicGF5X2RpdmlkZW5kIjoiRmluYW5jaW5nIiwicGF5X2VtcGxveWVlcyI6Ik9wZXJhdGluZyIsInBheV9vcGVyYXRpbmdfY29zdHMiOiJPcGVyYXRpbmciLCJzZXJ2ZV9jdXN0b21lcnMiOiJPcGVyYXRpbmcifSwiYXNzZXQiOiJFc3NlbnRpYWwgc2V0dXAiLCJkZWNpc2lvbl9jb21wbGV0ZWQiOnRydWUsImRpdmlkZW5kIjoiUmV0dXJuIHNvbWUgdmFsdWUgdG8gc2hhcmVob2xkZXJzIiwiZnVuZGluZyI6IkJhbGFuY2VkIiwibGF1bmNoZWQiOnRydWUsIm9wZXJhdGluZyI6IkJhbGFuY2VkIGdyb3d0aCIsIm9yZ2FuaXphdGlvbl9hbnN3ZXIiOiJDb3Jwb3JhdGlvbiIsIm9yZ2FuaXphdGlvbl9jaGVja2VkIjp0cnVlLCJwYWdlIjozLCJzdGF0ZW1lbnRfYW5zd2VycyI6eyJCYWxhbmNlIFNoZWV0IjoiQ3JlZGl0b3JzIGhhdmUgY2xhaW1zIG9mIFxcJDUwLDAwMCwgYW5kIHNoYXJlaG9sZGVycyBoYXZlIGNsYWltcyBvZiBcXCQ4NCwwMDAuIiwiSW5jb21lIFN0YXRlbWVudCI6IlRoZSBjb21wYW55IGVhcm5lZCBuZXQgaW5jb21lIG9mIFxcJDI0LDAwMCBmcm9tIGl0cyBvcGVyYXRpb25zIGR1cmluZyB0aGUgeWVhci4iLCJSZXRhaW5lZCBFYXJuaW5ncyI6IlRoZSBjdW11bGF0aXZlIG5ldCBpbmNvbWUgZWFybmVkIHNpbmNlIGluY2VwdGlvbiB0aGF0IGhhcyBub3QgYmVlbiBkaXN0cmlidXRlZCB0byBzaGFyZWhvbGRlcnMgYXMgZGl2aWRlbmRzLiIsIlN0YXRlbWVudCBvZiBDYXNoIEZsb3dzIjoiSXQgZXhwbGFpbnMgaG93IG9wZXJhdGluZywgaW52ZXN0aW5nLCBhbmQgZmluYW5jaW5nIGFjdGl2aXRpZXMgY2hhbmdlZCBjYXNoIGR1cmluZyB0aGUgcGVyaW9kLiJ9LCJzdGF0ZW1lbnRfcmVzdWx0cyI6eyJCYWxhbmNlIFNoZWV0Ijp0cnVlLCJJbmNvbWUgU3RhdGVtZW50Ijp0cnVlLCJSZXRhaW5lZCBFYXJuaW5ncyI6dHJ1ZSwiU3RhdGVtZW50IG9mIENhc2ggRmxvd3MiOnRydWV9LCJzdGF0ZW1lbnRfc2VsZWN0aW9uIjoiU3RhdGVtZW50IG9mIENhc2ggRmxvd3MifSwidmVyc2lvbiI6MX0&view=3",
+  "cold_initialization_ms": {
+    "samples": [
+      426.89999999990687,
+      303.0999999999767,
+      256.0999999999767,
+      283.29999999993015,
+      272
+    ],
+    "median": 283.29999999993015,
+    "conditions": "Five cache-disabled fresh Chromium contexts on local loopback; no hosted or capacity claim."
+  },
+  "checks": [
+    {
+      "name": "Organization alternatives, repeated checks, native title and initial navigation",
+      "status": "passed"
+    },
+    {
+      "name": "Unlaunched plan and organization drafts survive refresh",
+      "status": "passed"
+    },
+    {
+      "name": "Wrong map, unchanged original exploration gate, repeat submission, review and draft refresh",
+      "status": "passed"
+    },
+    {
+      "name": "All four statements, wrong answer, corrected draft restoration and original checked-question gate",
+      "status": "passed"
+    },
+    {
+      "name": "Complete lesson, three user perspectives, annual report components and debrief model answers",
+      "status": "passed"
+    },
+    {
+      "name": "Every backward/forward review, peer statement tabs, keyboard, future rejection and review bookmark refresh",
+      "status": "passed"
+    },
+    {
+      "name": "390px screenshots and 44px arrows, reset, independent contexts and retained old bookmarks",
+      "status": "passed"
+    },
+    {
+      "name": "Original Python links, native links, query/fragment preservation, malformed links and legacy unearned stations",
+      "status": "passed"
+    },
+    {
+      "name": "All 36 full business-plan routes, optional dividends and statement-question variants",
+      "status": "passed"
+    },
+    {
+      "name": "Five fresh cache-disabled local initialization measurements",
+      "status": "passed"
+    },
+    {
+      "name": "Only native local assets; zero external requests, runtime downloads, page errors or console errors",
+      "status": "passed"
+    }
+  ],
+  "requests": [
+    "/anatomy-of-a-business/js/",
+    "/anatomy-of-a-business/js/app.js",
+    "/anatomy-of-a-business/js/content.js",
+    "/anatomy-of-a-business/js/engine.js",
+    "/anatomy-of-a-business/js/original.css",
+    "/anatomy-of-a-business/js/style.css"
+  ],
+  "external_requests": [],
+  "page_errors": [],
+  "console_errors": [],
+  "downloads": "Not applicable: the unchanged Anatomy lesson defines no downloads or dataframes."
+}

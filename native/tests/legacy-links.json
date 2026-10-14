@@ -1,0 +1,108 @@
+[
+  {
+    "state": {
+      "page": 0,
+      "funding": "Balanced",
+      "asset": "Essential setup",
+      "operating": "Balanced growth",
+      "dividend": "Return some value to shareholders",
+      "organization_answer": "Corporation",
+      "organization_checked": true,
+      "launched": false,
+      "activity_selections": {},
+      "activity_answers": {},
+      "activity_checked": false,
+      "statement_selection": "Income Statement",
+      "statement_answers": {},
+      "statement_results": {},
+      "decision_completed": false
+    },
+    "token": "eyJzdGF0ZSI6eyJhY3Rpdml0eV9hbnN3ZXJzIjp7fSwiYWN0aXZpdHlfY2hlY2tlZCI6ZmFsc2UsImFjdGl2aXR5X3NlbGVjdGlvbnMiOnt9LCJhc3NldCI6IkVzc2VudGlhbCBzZXR1cCIsImRlY2lzaW9uX2NvbXBsZXRlZCI6ZmFsc2UsImRpdmlkZW5kIjoiUmV0dXJuIHNvbWUgdmFsdWUgdG8gc2hhcmVob2xkZXJzIiwiZnVuZGluZyI6IkJhbGFuY2VkIiwibGF1bmNoZWQiOmZhbHNlLCJvcGVyYXRpbmciOiJCYWxhbmNlZCBncm93dGgiLCJvcmdhbml6YXRpb25fYW5zd2VyIjoiQ29ycG9yYXRpb24iLCJvcmdhbml6YXRpb25fY2hlY2tlZCI6dHJ1ZSwicGFnZSI6MCwic3RhdGVtZW50X2Fuc3dlcnMiOnt9LCJzdGF0ZW1lbnRfcmVzdWx0cyI6e30sInN0YXRlbWVudF9zZWxlY3Rpb24iOiJJbmNvbWUgU3RhdGVtZW50In0sInZlcnNpb24iOjF9"
+  },
+  {
+    "state": {
+      "page": 1,
+      "funding": "Balanced",
+      "asset": "Essential setup",
+      "operating": "Balanced growth",
+      "dividend": "Return some value to shareholders",
+      "organization_answer": "Corporation",
+      "organization_checked": true,
+      "launched": true,
+      "activity_selections": {},
+      "activity_answers": {},
+      "activity_checked": false,
+      "statement_selection": "Income Statement",
+      "statement_answers": {},
+      "statement_results": {},
+      "decision_completed": false
+    },
+    "token": "eyJzdGF0ZSI6eyJhY3Rpdml0eV9hbnN3ZXJzIjp7fSwiYWN0aXZpdHlfY2hlY2tlZCI6ZmFsc2UsImFjdGl2aXR5X3NlbGVjdGlvbnMiOnt9LCJhc3NldCI6IkVzc2VudGlhbCBzZXR1cCIsImRlY2lzaW9uX2NvbXBsZXRlZCI6ZmFsc2UsImRpdmlkZW5kIjoiUmV0dXJuIHNvbWUgdmFsdWUgdG8gc2hhcmVob2xkZXJzIiwiZnVuZGluZyI6IkJhbGFuY2VkIiwibGF1bmNoZWQiOnRydWUsIm9wZXJhdGluZyI6IkJhbGFuY2VkIGdyb3d0aCIsIm9yZ2FuaXphdGlvbl9hbnN3ZXIiOiJDb3Jwb3JhdGlvbiIsIm9yZ2FuaXphdGlvbl9jaGVja2VkIjp0cnVlLCJwYWdlIjoxLCJzdGF0ZW1lbnRfYW5zd2VycyI6e30sInN0YXRlbWVudF9yZXN1bHRzIjp7fSwic3RhdGVtZW50X3NlbGVjdGlvbiI6IkluY29tZSBTdGF0ZW1lbnQifSwidmVyc2lvbiI6MX0"
+  },
+  {
+    "state": {
+      "page": 2,
+      "funding": "Balanced",
+      "asset": "Essential setup",
+      "operating": "Balanced growth",
+      "dividend": "Return some value to shareholders",
+      "organization_answer": "Corporation",
+      "organization_checked": true,
+      "launched": true,
+      "activity_selections": {},
+      "activity_answers": {
+        "issue_stock": "Financing",
+        "bank_loan": "Financing",
+        "buy_equipment": "Investing",
+        "serve_customers": "Operating",
+        "pay_employees": "Operating",
+        "pay_operating_costs": "Operating",
+        "pay_dividend": "Financing"
+      },
+      "activity_checked": true,
+      "statement_selection": "Income Statement",
+      "statement_answers": {},
+      "statement_results": {},
+      "decision_completed": false
+    },
+    "token": "eyJzdGF0ZSI6eyJhY3Rpdml0eV9hbnN3ZXJzIjp7ImJhbmtfbG9hbiI6IkZpbmFuY2luZyIsImJ1eV9lcXVpcG1lbnQiOiJJbnZlc3RpbmciLCJpc3N1ZV9zdG9jayI6IkZpbmFuY2luZyIsInBheV9kaXZpZGVuZCI6IkZpbmFuY2luZyIsInBheV9lbXBsb3llZXMiOiJPcGVyYXRpbmciLCJwYXlfb3BlcmF0aW5nX2Nvc3RzIjoiT3BlcmF0aW5nIiwic2VydmVfY3VzdG9tZXJzIjoiT3BlcmF0aW5nIn0sImFjdGl2aXR5X2NoZWNrZWQiOnRydWUsImFjdGl2aXR5X3NlbGVjdGlvbnMiOnt9LCJhc3NldCI6IkVzc2VudGlhbCBzZXR1cCIsImRlY2lzaW9uX2NvbXBsZXRlZCI6ZmFsc2UsImRpdmlkZW5kIjoiUmV0dXJuIHNvbWUgdmFsdWUgdG8gc2hhcmVob2xkZXJzIiwiZnVuZGluZyI6IkJhbGFuY2VkIiwibGF1bmNoZWQiOnRydWUsIm9wZXJhdGluZyI6IkJhbGFuY2VkIGdyb3d0aCIsIm9yZ2FuaXphdGlvbl9hbnN3ZXIiOiJDb3Jwb3JhdGlvbiIsIm9yZ2FuaXphdGlvbl9jaGVja2VkIjp0cnVlLCJwYWdlIjoyLCJzdGF0ZW1lbnRfYW5zd2VycyI6e30sInN0YXRlbWVudF9yZXN1bHRzIjp7fSwic3RhdGVtZW50X3NlbGVjdGlvbiI6IkluY29tZSBTdGF0ZW1lbnQifSwidmVyc2lvbiI6MX0"
+  },
+  {
+    "state": {
+      "page": 3,
+      "funding": "Balanced",
+      "asset": "Essential setup",
+      "operating": "Balanced growth",
+      "dividend": "Return some value to shareholders",
+      "organization_answer": "Corporation",
+      "organization_checked": true,
+      "launched": true,
+      "activity_selections": {},
+      "activity_answers": {
+        "issue_stock": "Financing",
+        "bank_loan": "Financing",
+        "buy_equipment": "Investing",
+        "serve_customers": "Operating",
+        "pay_employees": "Operating",
+        "pay_operating_costs": "Operating",
+        "pay_dividend": "Financing"
+      },
+      "activity_checked": true,
+      "statement_selection": "Income Statement",
+      "statement_answers": {
+        "Income Statement": "The company earned net income of \\$24,000 from its operations during the year.",
+        "Retained Earnings": "The cumulative net income earned since inception that has not been distributed to shareholders as dividends.",
+        "Balance Sheet": "Creditors have claims of \\$50,000, and shareholders have claims of \\$84,000.",
+        "Statement of Cash Flows": "It explains how operating, investing, and financing activities changed cash during the period."
+      },
+      "statement_results": {
+        "Income Statement": true,
+        "Retained Earnings": true,
+        "Balance Sheet": true,
+        "Statement of Cash Flows": true
+      },
+      "decision_completed": true
+    },
+    "token": "eyJzdGF0ZSI6eyJhY3Rpdml0eV9hbnN3ZXJzIjp7ImJhbmtfbG9hbiI6IkZpbmFuY2luZyIsImJ1eV9lcXVpcG1lbnQiOiJJbnZlc3RpbmciLCJpc3N1ZV9zdG9jayI6IkZpbmFuY2luZyIsInBheV9kaXZpZGVuZCI6IkZpbmFuY2luZyIsInBheV9lbXBsb3llZXMiOiJPcGVyYXRpbmciLCJwYXlfb3BlcmF0aW5nX2Nvc3RzIjoiT3BlcmF0aW5nIiwic2VydmVfY3VzdG9tZXJzIjoiT3BlcmF0aW5nIn0sImFjdGl2aXR5X2NoZWNrZWQiOnRydWUsImFjdGl2aXR5X3NlbGVjdGlvbnMiOnt9LCJhc3NldCI6IkVzc2VudGlhbCBzZXR1cCIsImRlY2lzaW9uX2NvbXBsZXRlZCI6dHJ1ZSwiZGl2aWRlbmQiOiJSZXR1cm4gc29tZSB2YWx1ZSB0byBzaGFyZWhvbGRlcnMiLCJmdW5kaW5nIjoiQmFsYW5jZWQiLCJsYXVuY2hlZCI6dHJ1ZSwib3BlcmF0aW5nIjoiQmFsYW5jZWQgZ3Jvd3RoIiwib3JnYW5pemF0aW9uX2Fuc3dlciI6IkNvcnBvcmF0aW9uIiwib3JnYW5pemF0aW9uX2NoZWNrZWQiOnRydWUsInBhZ2UiOjMsInN0YXRlbWVudF9hbnN3ZXJzIjp7IkJhbGFuY2UgU2hlZXQiOiJDcmVkaXRvcnMgaGF2ZSBjbGFpbXMgb2YgXFwkNTAsMDAwLCBhbmQgc2hhcmVob2xkZXJzIGhhdmUgY2xhaW1zIG9mIFxcJDg0LDAwMC4iLCJJbmNvbWUgU3RhdGVtZW50IjoiVGhlIGNvbXBhbnkgZWFybmVkIG5ldCBpbmNvbWUgb2YgXFwkMjQsMDAwIGZyb20gaXRzIG9wZXJhdGlvbnMgZHVyaW5nIHRoZSB5ZWFyLiIsIlJldGFpbmVkIEVhcm5pbmdzIjoiVGhlIGN1bXVsYXRpdmUgbmV0IGluY29tZSBlYXJuZWQgc2luY2UgaW5jZXB0aW9uIHRoYXQgaGFzIG5vdCBiZWVuIGRpc3RyaWJ1dGVkIHRvIHNoYXJlaG9sZGVycyBhcyBkaXZpZGVuZHMuIiwiU3RhdGVtZW50IG9mIENhc2ggRmxvd3MiOiJJdCBleHBsYWlucyBob3cgb3BlcmF0aW5nLCBpbnZlc3RpbmcsIGFuZCBmaW5hbmNpbmcgYWN0aXZpdGllcyBjaGFuZ2VkIGNhc2ggZHVyaW5nIHRoZSBwZXJpb2QuIn0sInN0YXRlbWVudF9yZXN1bHRzIjp7IkJhbGFuY2UgU2hlZXQiOnRydWUsIkluY29tZSBTdGF0ZW1lbnQiOnRydWUsIlJldGFpbmVkIEVhcm5pbmdzIjp0cnVlLCJTdGF0ZW1lbnQgb2YgQ2FzaCBGbG93cyI6dHJ1ZX0sInN0YXRlbWVudF9zZWxlY3Rpb24iOiJJbmNvbWUgU3RhdGVtZW50In0sInZlcnNpb24iOjF9"
+  }
+]

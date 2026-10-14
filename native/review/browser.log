@@ -1,0 +1,84 @@
+PASSED: Organization alternatives, repeated checks, native title and initial navigation
+PASSED: Unlaunched plan and organization drafts survive refresh
+PASSED: Wrong map, unchanged original exploration gate, repeat submission, review and draft refresh
+PASSED: All four statements, wrong answer, corrected draft restoration and original checked-question gate
+PASSED: Complete lesson, three user perspectives, annual report components and debrief model answers
+PASSED: Every backward/forward review, peer statement tabs, keyboard, future rejection and review bookmark refresh
+PASSED: 390px screenshots and 44px arrows, reset, independent contexts and retained old bookmarks
+PASSED: Original Python links, native links, query/fragment preservation, malformed links and legacy unearned stations
+PASSED: All 36 full business-plan routes, optional dividends and statement-question variants
+PASSED: Five fresh cache-disabled local initialization measurements
+PASSED: Only native local assets; zero external requests, runtime downloads, page errors or console errors
+{
+  "url": "http://127.0.0.1:35163/anatomy-of-a-business/js/",
+  "conditions": "Local loopback; Chromium; external requests blocked; no hosted proxy bypass.",
+  "cold_initialization_ms": {
+    "samples": [
+      426.89999999990687,
+      303.0999999999767,
+      256.0999999999767,
+      283.29999999993015,
+      272
+    ],
+    "median": 283.29999999993015,
+    "conditions": "Five cache-disabled fresh Chromium contexts on local loopback; no hosted or capacity claim."
+  },
+  "checks": [
+    {
+      "name": "Organization alternatives, repeated checks, native title and initial navigation",
+      "status": "passed"
+    },
+    {
+      "name": "Unlaunched plan and organization drafts survive refresh",
+      "status": "passed"
+    },
+    {
+      "name": "Wrong map, unchanged original exploration gate, repeat submission, review and draft refresh",
+      "status": "passed"
+    },
+    {
+      "name": "All four statements, wrong answer, corrected draft restoration and original checked-question gate",
+      "status": "passed"
+    },
+    {
+      "name": "Complete lesson, three user perspectives, annual report components and debrief model answers",
+      "status": "passed"
+    },
+    {
+      "name": "Every backward/forward review, peer statement tabs, keyboard, future rejection and review bookmark refresh",
+      "status": "passed"
+    },
+    {
+      "name": "390px screenshots and 44px arrows, reset, independent contexts and retained old bookmarks",
+      "status": "passed"
+    },
+    {
+      "name": "Original Python links, native links, query/fragment preservation, malformed links and legacy unearned stations",
+      "status": "passed"
+    },
+    {
+      "name": "All 36 full business-plan routes, optional dividends and statement-question variants",
+      "status": "passed"
+    },
+    {
+      "name": "Five fresh cache-disabled local initialization measurements",
+      "status": "passed"
+    },
+    {
+      "name": "Only native local assets; zero external requests, runtime downloads, page errors or console errors",
+      "status": "passed"
+    }
+  ],
+  "requests": [
+    "/anatomy-of-a-business/js/",
+    "/anatomy-of-a-business/js/app.js",
+    "/anatomy-of-a-business/js/content.js",
+    "/anatomy-of-a-business/js/engine.js",
+    "/anatomy-of-a-business/js/original.css",
+    "/anatomy-of-a-business/js/style.css"
+  ],
+  "external_requests": [],
+  "page_errors": [],
+  "console_errors": [],
+  "downloads": "Not applicable: the unchanged Anatomy lesson defines no downloads or dataframes."
+}
