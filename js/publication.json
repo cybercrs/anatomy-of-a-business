@@ -1,0 +1,9 @@
+{
+  "repository": "cybercrs/anatomy-of-a-business",
+  "source_branch": "native/html-js",
+  "source_commit": "936f06ef1627385c66cf7f2b6c7946080df01a7c",
+  "static_parent": "cd480b0fa684ebd5bef2a4e6d6dc691f46451273",
+  "description": "Student-facing native HTML/CSS/JavaScript accounting activity",
+  "path": "/js/",
+  "hosted_browser_testing": "Not run; known proxy restriction respected"
+}

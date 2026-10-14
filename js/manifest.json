@@ -1,0 +1,32 @@
+{
+  "app": "Anatomy of a Business",
+  "description": "Student-facing native HTML/CSS/JavaScript accounting activity",
+  "path": "/js/",
+  "files": {
+    "index.html": {
+      "bytes": 2213,
+      "sha256": "e46bec68644aef09ce64f278c5c9b8f839a7f0e27adf6f113656e94fdd7fcee7"
+    },
+    "app.js": {
+      "bytes": 14965,
+      "sha256": "29691d55f62ab4166594fae527e4cf1adb5aabcda40e5164f829cffb2df51ad8"
+    },
+    "engine.js": {
+      "bytes": 10320,
+      "sha256": "9049a4ba9767d52163bc3355b67527d688f2e25f49b450f3cc4cda2b4971a9f5"
+    },
+    "content.js": {
+      "bytes": 329009,
+      "sha256": "920cbfeac243a9c84ae13d0a284c440a85859cf7cf727d988ac380f655d42e0d"
+    },
+    "style.css": {
+      "bytes": 4434,
+      "sha256": "0997ab747de907100452337ab9cef1ae4435f47116048b8e918344437a390528"
+    },
+    "original.css": {
+      "bytes": 10128,
+      "sha256": "edf9dbd7e8e7f5ef36040a29dbc444610b18c5aa62097af0857ced2b9556e63b"
+    }
+  },
+  "asset_bytes": 371069
+}
