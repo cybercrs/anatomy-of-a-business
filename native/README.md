@@ -32,3 +32,5 @@ node --test native/tests/*.test.mjs
 The exporter reads the unchanged Python source only during development. The build copies only six native assets and a hash manifest. `--site-output PATH` writes only `PATH/js/`. Serve the built directory over HTTP(S); `file://` is unsupported. Current ES-module browsers with Web Crypto and structured cloning are required. Chromium is tested; physical devices and broader browser coverage are unmeasured.
 
 Reviewed screenshots and detailed checks are in `review/` and `VALIDATION.md`. Publication verifies the exact source/static commits, preserves every existing non-js static blob, and checks the subsequent Pages deployment. Hosted browser QA remains unavailable under the known Pages-hostname proxy denial; no alternate route is used.
+
+The original tab icon is embedded as a self-contained SVG data asset. Final metadata QA verifies the exact title, decodes the icon, and confirms only index.html changed among runtime assets; lesson JavaScript/CSS/content are unchanged.
